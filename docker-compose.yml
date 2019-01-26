@@ -1,0 +1,32 @@
+version: '3'
+services:
+  rclone:
+    image: "sakurachan0/rclone"
+    stdin_open: true
+    tty: true
+    volumes:
+      - rclone_db:/root/.config/rclone
+      - "${PWD}/data:/data"
+    networks:
+      - app_net
+    ports:
+      - "8080:8080"
+    container_name: rclone
+  
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - nginx_db:/etc/nginx
+      - "${PWD}/data:/data"
+    network_mode: "host"
+    ports:
+      - "80:80"
+      - "443:443"
+    container_name: nginx
+
+volumes:
+  rclone_db:
+  nginx_db:
+
+networks:
+  app_net:
